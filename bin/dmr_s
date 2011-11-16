@@ -1,0 +1,48 @@
+#!/usr/bin/env ruby
+
+input = ARGV[0]
+file = File.new(input, "r")
+
+procs = []
+vars = {}
+cuadruplos = []
+
+while((line = file.gets) and !line.include?("---"))
+  line = line.gsub("\n", "")
+  procs << line.split("\t")
+end
+
+while((line = file.gets) and !line.include?("---"))
+  line = line.gsub("\n", "")
+  # var = line.split("\t")
+  # vars[var[2]] = 0
+end
+
+while((line = file.gets) and !line.include?("---"))
+  line = line.gsub("\n", "")
+  cuadruplos << line.split("\t")
+end
+
+file.close
+ip = 0
+while ip < cuadruplos.size
+  cuadruplo = cuadruplos[ip]
+  
+  case cuadruplo[0]
+  when "+"
+    vars[cuadruplo[3]] = cuadruplo[1].to_i + cuadruplo[2].to_i
+  when "-"
+    vars[cuadruplo[3]] = cuadruplo[1].to_i - cuadruplo[2].to_i
+  when "/"
+    vars[cuadruplo[3]] = cuadruplo[1].to_i * cuadruplo[2].to_i
+  when "*"
+    vars[cuadruplo[3]] = cuadruplo[1].to_i / cuadruplo[2].to_i
+  when "="
+    vars[cuadruplo[3]] = vars[cuadruplo[1]]
+  when "write"
+    puts vars[cuadruplo[1]]
+  when "goto"
+    ip = cuadruplo[1].to_i - 1
+  end
+  ip += 1
+end

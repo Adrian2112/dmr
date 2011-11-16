@@ -1,0 +1,17 @@
+class	class		1	0	0	0	0	0
+---
+b	int	1001	0	0	0
+c	int	1002	0	0	0
+d	int	1003	0	0	0
+a	int	1000	0	0	0
+---
++	1	2	t1
+=	t1		x
+/	2	3	t2
+=	t2		y
+goto	9
+-	3	4	t4
+=	t4		z
+write	t1
+write	t2
+goto	5	
