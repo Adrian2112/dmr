@@ -1,0 +1,1 @@
+require 'dmr/string/string_ext.rb'
