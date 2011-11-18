@@ -34,6 +34,7 @@ module DMR
     attr_reader :temporales_globales_boolean
     attr_reader :constante_int
     attr_reader :constante_float
+    attr_reader :stack
     
     def initialize
       @globales_int = {}
@@ -52,6 +53,8 @@ module DMR
       @temporales_globales_boolean = {}
       @constante_int = {}
       @constante_float = {}
+      @stack = DMR::Stack.new
+      @params = []
     end
     
     # carga la variable dada en el arreglo que le corresponde segun su direccion
@@ -98,6 +101,76 @@ module DMR
         when CONSTANTE_INT              then return @constante_int[direccion]
         when CONSTANTE_FLOAT            then return @constante_float[direccion]
       end
+    end
+    
+    # vacia las variables locales y el ip en un stack
+    def push_variables_stack
+      @stack.push_variables(@locales_int, @locales_float, @locales_boolean, @locales_string,
+                  @temporales_locales_int, @temporales_locales_float, @temporales_locales_boolean)
+      @locales_int                = {}
+      @locales_float              = {}
+      @locales_boolean            = {}
+      @locales_string             = {}
+      @temporales_locales_int     = {}
+      @temporales_locales_float   = {}
+      @temporales_locales_boolean = {}
+    end
+    
+    # pone la direccion de retorno
+    def push_ip(ip)
+      @stack.push_ip(ip)
+    end
+    
+    # hace pop al stack y pone las variables anteriores
+    # regresa el ip anterior
+    def pop_stack
+      pop = @stack.pop
+      @locales_int                 = pop[0]
+      @locales_float               = pop[1]
+      @locales_boolean             = pop[2]
+      @locales_string              = pop[3]
+      @temporales_locales_int      = pop[4]
+      @temporales_locales_float    = pop[5]
+      @temporales_locales_boolean  = pop[6]
+      return pop[7].to_i
+    end
+    
+    # guarda el contenido de los parametros en un arreglo
+    def push_param(param, direccion)
+      direccion = direccion.to_i
+      @params << [direccion, self.get_variable(direccion)]
+    end
+    
+    # pone los parametros como las primeras variables locales dependiendo del tipo
+    def set_params
+      int     = LOCAL_INT.to_a.first
+      float   = LOCAL_FLOAT.to_a.first
+      boolean = LOCAL_BOOLEAN.to_a.first
+      string  = LOCAL_STRING.to_a.first
+            
+      int_range = GLOBAL_INT.to_a + LOCAL_INT.to_a + TEMPORAL_GLOBAL_INT.to_a + TEMPORAL_LOCAL_INT.to_a + CONSTANTE_INT.to_a
+      float_range = GLOBAL_FLOAT.to_a + LOCAL_FLOAT.to_a + TEMPORAL_GLOBAL_FLOAT.to_a + TEMPORAL_LOCAL_FLOAT.to_a + CONSTANTE_FLOAT.to_a
+      boolean_range = GLOBAL_BOOLEAN.to_a + LOCAL_BOOLEAN.to_a + TEMPORAL_GLOBAL_BOOLEAN.to_a + TEMPORAL_LOCAL_BOOLEAN.to_a
+      string_range = GLOBAL_STRING.to_a + LOCAL_STRING.to_a
+      
+      @params.each do |param|
+        case
+          when int_range.include?(param[0])
+            direccion = int
+            int+=1
+          when float_range.include?(param[0])
+            direccion = float
+            float+=1
+          when boolean_range.include?(param[0])
+            direccion = boolean
+            boolean+=1
+          when string_range.include?(param[0])
+            direccion = string
+            string+=1
+        end        
+        self.set_variable(direccion, param[1])
+      end
+      @params = []
     end
     
     def boolean(valor)
