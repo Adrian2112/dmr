@@ -13,7 +13,7 @@ module DMR
       read_file_parts(file, @variables)
       
       while((line = file.gets) and !line.include?("---"))
-        line = line.gsub("\n", "")
+        line = line.chomp
         var = line.split("\t")
 
         @variables.set_variable(var[0], var[1])
@@ -33,6 +33,9 @@ module DMR
         # cambia las direcciones con parentesis por la direccion que esta dentro de esta direccion
         if cuadruplo[2] =~ @pointer_regex
           cuadruplo[2] = @variables.get_variable(cuadruplo[2].gsub(/\(|\)/, ""))
+        end
+        if cuadruplo[3] =~ @pointer_regex
+          cuadruplo[3] = @variables.get_variable(cuadruplo[3].gsub(/\(|\)/, ""))
         end
         if cuadruplo[4] =~ @pointer_regex
           cuadruplo[4] = @variables.get_variable(cuadruplo[4].gsub(/\(|\)/, ""))
@@ -110,14 +113,14 @@ module DMR
     # lee una parte del archivo y le manda cada linea a la 'funcion' de la 'variable'
     def read_file_parts(file, variable, funcion = nil)
       while((line = file.gets) and !line.include?("---"))
-        line = line.gsub("\n", "").split("\t")
+        line = line.chomp.split("\t")
         variable.send(funcion, line) if funcion
       end
     end
 
     def read_procedimientos(file)
       while((line = file.gets) and !line.include?("---"))
-        line = line.gsub("\n", "").split("\t")
+        line = line.chomp.split("\t")
         @procedimientos.merge!( { line[3].to_i => [] } )
       end
     end
