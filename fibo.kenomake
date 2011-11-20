@@ -1,0 +1,38 @@
+class	class	() 	1	0	0	0	0	0
+fibonacci	int	(int,) 	3	1	1	0	0	0
+main	int	() 	21	0	0	0	0	0
+---
+hola	1000
+fibonacci	1001
+main	1002
+---
+15002	1
+15000	2
+15003	5
+15001	0
+---
+1	=	15000		1000
+2	goTo			21
+3	==	5000	15001	14000
+4	==	5000	15002	14001
+5	or	14000	14001	14002
+6	gotoFalso	14002		10
+7	return	1001		15002
+8	RET			
+9	goTo			21
+10	ERA	0		
+11	-	5000	15002	12000
+12	param	12000		param0
+13	gosub			3
+14	ERA	0		
+15	-	5000	15000	12002
+16	param	12002		param0
+17	gosub			3
+18	+	1001	1001	12004
+19	return	1001		12004
+20	RET			
+21	ERA	8		
+22	param	15003		param0
+23	gosub			3
+24	write			1001
+25	END				

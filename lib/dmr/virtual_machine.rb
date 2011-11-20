@@ -54,6 +54,40 @@ module DMR
         when "*"                                    
           tmp = (@variables.get_variable(cuadruplo[2]) * @variables.get_variable(cuadruplo[3]))
           @variables.set_variable(cuadruplo[4], tmp)
+        when "cos"
+          tmp = Math.cos(@variables.get_variable(cuadruplo[2]))
+          @variables.set_variable(cuadruplo[4], tmp)
+        when "acos"
+          tmp = Math.acos(@variables.get_variable(cuadruplo[2]))
+          @variables.set_variable(cuadruplo[4], tmp)
+        when "sen"
+          tmp = Math.sin(@variables.get_variable(cuadruplo[2]))
+          @variables.set_variable(cuadruplo[4], tmp)
+        when "asen"
+          tmp = Math.asin(@variables.get_variable(cuadruplo[2]))
+          @variables.set_variable(cuadruplo[4], tmp)
+        when "tan"
+          tmp = Math.tan(@variables.get_variable(cuadruplo[2]))
+          @variables.set_variable(cuadruplo[4], tmp)
+        when "atan"
+          tmp = Math.atan(@variables.get_variable(cuadruplo[2]))
+          @variables.set_variable(cuadruplo[4], tmp)
+        when "exp"
+          tmp = Math.exp(@variables.get_variable(cuadruplo[2]))
+          @variables.set_variable(cuadruplo[4], tmp)
+        when "ln"
+          tmp = Math.log(@variables.get_variable(cuadruplo[2]))
+          @variables.set_variable(cuadruplo[4], tmp)
+        when "log10"
+          tmp = Math.log10(@variables.get_variable(cuadruplo[2]))
+          @variables.set_variable(cuadruplo[4], tmp)
+        when "log2"
+          tmp = @variables.get_variable(cuadruplo[2])
+          @variables.set_variable(cuadruplo[4], Math.log10(tmp)/Math.log10(2))
+        when "logn"
+          tmp = Math.log10(@variables.get_variable(cuadruplo[2]))
+          n = Math.log10(@variables.get_variable(cuadruplo[3]))
+          @variables.set_variable(cuadruplo[4], tmp/n)
         when "="
           @variables.set_variable(cuadruplo[4],@variables.get_variable(cuadruplo[2]))
         when "+A"

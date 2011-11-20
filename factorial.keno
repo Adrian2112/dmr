@@ -1,0 +1,33 @@
+class	class	() 	1	0	0	0	0	0
+factorial	int	(int,) 	2	1	1	0	0	0
+main	int	() 	16	0	0	0	0	0
+---
+factorial	1000
+main	1001
+---
+15000	1
+15002	6
+15001	0
+---
+1	goTo			17
+2	==	5000	15000	14000
+3	==	5000	15001	14001
+4	or	14000	14001	14002
+5	gotoFalso	14002		9
+6	return	1000		15000
+7	RET			
+8	goTo			17
+9	ERA	0		
+10	-	5000	15000	12000
+11	param	12000		param0
+12	gosub			2
+12	=	1000		12005
+13	*	5000	1000	12002
+14	return	1000		12002
+15	RET			
+16	ERA	8		
+17	param	15002		param0
+18	gosub			2
+18	=	1000		12006
+19	write			1000
+20	END				
