@@ -1,0 +1,1 @@
+require 'dmr/object/object_ext.rb'

@@ -64,18 +64,18 @@ module DMR
       case direccion
         when GLOBAL_INT                 then @globales_int.merge!({direccion => valor.to_i})
         when GLOBAL_FLOAT               then @globales_float.merge!({direccion => valor.to_f})
-        when GLOBAL_BOOLEAN             then @globales_boolean.merge!({direccion => boolean(valor)})
+        when GLOBAL_BOOLEAN             then @globales_boolean.merge!({direccion => valor.to_boolean})
         when GLOBAL_STRING              then @globales_string.merge!({direccion => valor.gsub("\"", "")})
         when LOCAL_INT                  then @locales_int.merge!({direccion => valor.to_i})
         when LOCAL_FLOAT                then @locales_float.merge!({direccion => valor.to_f})
-        when LOCAL_BOOLEAN              then @locales_boolean.merge!({direccion => boolean(valor)})
+        when LOCAL_BOOLEAN              then @locales_boolean.merge!({direccion => valor.to_boolean})
         when LOCAL_STRING               then @locales_string.merge!({direccion => valor.gsub("\"", "")})
         when TEMPORAL_GLOBAL_INT        then @temporales_globales_int.merge!({direccion => valor.to_i})
         when TEMPORAL_GLOBAL_FLOAT      then @temporales_globales_float.merge!({direccion => valor.to_f})
-        when TEMPORAL_GLOBAL_BOOLEAN    then @temporales_globales_boolean.merge!({direccion => boolean(valor)})
+        when TEMPORAL_GLOBAL_BOOLEAN    then @temporales_globales_boolean.merge!({direccion => valor.to_boolean})
         when TEMPORAL_LOCAL_INT         then @temporales_locales_int.merge!({direccion => valor.to_i})
         when TEMPORAL_LOCAL_FLOAT       then @temporales_locales_float.merge!({direccion => valor.to_f})
-        when TEMPORAL_LOCAL_BOOLEAN     then @temporales_locales_boolean.merge!({direccion => boolean(valor)})
+        when TEMPORAL_LOCAL_BOOLEAN     then @temporales_locales_boolean.merge!({direccion => valor.to_boolean})
         when CONSTANTE_INT              then @constante_int.merge!({direccion => valor.to_i})
         when CONSTANTE_FLOAT            then @constante_float.merge!({direccion => valor.to_f})
       end
@@ -175,15 +175,6 @@ module DMR
         self.set_variable(direccion, param[1])
       end
       @params = []
-    end
-    
-    def boolean(valor)
-      if valor.class == String
-        valor.to_boolean
-      elsif valor.class == TrueClass or valor.class == FalseClass
-        return valor
-      end
-      return false
     end
             
   end
