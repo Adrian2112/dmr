@@ -127,6 +127,27 @@ module DMR
         when "write"
           print @variables.get_variable(cuadruplo[4])
           $stdout.flush
+        when "read_int"
+          tmp = STDIN.gets.chomp
+          val = tmp.match(/^[-+]?[0-9]*$/)
+          if val.nil?
+            puts "Dennis dice: '#{tmp}' no es un integer."
+            puts "Dennis ha hablado."
+            Process.exit
+          end
+          @variables.set_variable(cuadruplo[4],val[0])
+        when "read_float"
+          tmp = STDIN.gets.chomp
+          val = tmp.match(/^[-+]?[0-9]*\.?[0-9]+?$/)
+          if val.nil?
+            puts "Dennis dice: '#{tmp}' no es un float."
+            puts "Dennis ha hablado."
+            Process.exit
+          end
+          @variables.set_variable(cuadruplo[4],val[0])
+        when "read_string"
+          tmp = STDIN.gets.chomp
+          @variables.set_variable(cuadruplo[4],tmp)
         when "goTo"
           @ip = cuadruplo[4].to_i - 1
         when "gotoFalso"
@@ -145,6 +166,7 @@ module DMR
         when "ver"
           if @variables.get_variable(cuadruplo[2]) >= cuadruplo[4].to_i
             puts "Dennis dice: Indice '#{@variables.get_variable(cuadruplo[2])}' fuera del rango del arreglo"
+            puts "Dennis ha hablado."
             Process.exit
           end
         when "END"

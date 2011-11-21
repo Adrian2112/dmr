@@ -17,6 +17,8 @@ module DMR
     TEMPORAL_LOCAL_BOOLEAN  = 14000..14999
     CONSTANTE_INT           = 15000..15999
     CONSTANTE_FLOAT         = 16000..16999
+    TEMPORAL_LOCAL_STRING   = 17000..17999
+    TEMPORAL_GLOBAL_STRING  = 18000..18999
     
     attr_reader :globales_int
     attr_reader :globales_float
@@ -29,9 +31,11 @@ module DMR
     attr_reader :temporales_locales_int
     attr_reader :temporales_locales_float
     attr_reader :temporales_locales_boolean
+    attr_reader :temporales_locales_string
     attr_reader :temporales_globales_int
     attr_reader :temporales_globales_float
     attr_reader :temporales_globales_boolean
+    attr_reader :temporales_globales_string
     attr_reader :constante_int
     attr_reader :constante_float
     attr_reader :stack
@@ -48,9 +52,11 @@ module DMR
       @temporales_locales_int = {}
       @temporales_locales_float = {}
       @temporales_locales_boolean = {}
+      @temporales_locales_string = {}
       @temporales_globales_int = {}
       @temporales_globales_float = {}
       @temporales_globales_boolean = {}
+      @temporales_globales_string = {}
       @constante_int = {}
       @constante_float = {}
       @stack = DMR::Stack.new
@@ -73,9 +79,11 @@ module DMR
         when TEMPORAL_GLOBAL_INT        then @temporales_globales_int.merge!({direccion => valor.to_i})
         when TEMPORAL_GLOBAL_FLOAT      then @temporales_globales_float.merge!({direccion => valor.to_f})
         when TEMPORAL_GLOBAL_BOOLEAN    then @temporales_globales_boolean.merge!({direccion => valor.to_boolean})
+        when TEMPORAL_GLOBAL_STRING     then @temporales_globales_string.merge!({direccion => valor.gsub("\"","")})
         when TEMPORAL_LOCAL_INT         then @temporales_locales_int.merge!({direccion => valor.to_i})
         when TEMPORAL_LOCAL_FLOAT       then @temporales_locales_float.merge!({direccion => valor.to_f})
         when TEMPORAL_LOCAL_BOOLEAN     then @temporales_locales_boolean.merge!({direccion => valor.to_boolean})
+        when TEMPORAL_LOCAL_STRING      then @temporales_locales_string.merge!({direccion => valor.gsub("\"","")})
         when CONSTANTE_INT              then @constante_int.merge!({direccion => valor.to_i})
         when CONSTANTE_FLOAT            then @constante_float.merge!({direccion => valor.to_f})
       end
@@ -83,7 +91,7 @@ module DMR
     
     def get_variable(direccion)
       if direccion.include?("\"")
-        return direccion
+        return direccion.gsub("\"","")
       else
         direccion = direccion.to_i
       end
@@ -99,9 +107,11 @@ module DMR
         when TEMPORAL_GLOBAL_INT        then return @temporales_globales_int[direccion]
         when TEMPORAL_GLOBAL_FLOAT      then return @temporales_globales_float[direccion]
         when TEMPORAL_GLOBAL_BOOLEAN    then return @temporales_globales_boolean[direccion]
+        when TEMPORAL_GLOBAL_STRING     then return @temporales_globales_string[direccion]
         when TEMPORAL_LOCAL_INT         then return @temporales_locales_int[direccion]
         when TEMPORAL_LOCAL_FLOAT       then return @temporales_locales_float[direccion]
         when TEMPORAL_LOCAL_BOOLEAN     then return @temporales_locales_boolean[direccion]
+        when TEMPORAL_LOCAL_STRING      then return @temporales_locales_string[direccion]
         when CONSTANTE_INT              then return @constante_int[direccion]
         when CONSTANTE_FLOAT            then return @constante_float[direccion]
       end
@@ -110,7 +120,7 @@ module DMR
     # vacia las variables locales y el ip en un stack
     def push_variables_stack
       @stack.push_variables(@locales_int, @locales_float, @locales_boolean, @locales_string,
-                  @temporales_locales_int, @temporales_locales_float, @temporales_locales_boolean)
+                  @temporales_locales_int, @temporales_locales_float, @temporales_locales_boolean, @temporales_locales_string)
       @locales_int                = {}
       @locales_float              = {}
       @locales_boolean            = {}
@@ -118,6 +128,7 @@ module DMR
       @temporales_locales_int     = {}
       @temporales_locales_float   = {}
       @temporales_locales_boolean = {}
+      @temporales_locales_string  = {}
     end
     
     # pone la direccion de retorno
@@ -136,7 +147,8 @@ module DMR
       @temporales_locales_int      = pop[4]
       @temporales_locales_float    = pop[5]
       @temporales_locales_boolean  = pop[6]
-      return pop[7].to_i
+      @temporales_locales_string   = pop[7]
+      return pop[8].to_i
     end
     
     # guarda el contenido de los parametros en un arreglo
@@ -155,7 +167,7 @@ module DMR
       int_range = GLOBAL_INT.to_a + LOCAL_INT.to_a + TEMPORAL_GLOBAL_INT.to_a + TEMPORAL_LOCAL_INT.to_a + CONSTANTE_INT.to_a
       float_range = GLOBAL_FLOAT.to_a + LOCAL_FLOAT.to_a + TEMPORAL_GLOBAL_FLOAT.to_a + TEMPORAL_LOCAL_FLOAT.to_a + CONSTANTE_FLOAT.to_a
       boolean_range = GLOBAL_BOOLEAN.to_a + LOCAL_BOOLEAN.to_a + TEMPORAL_GLOBAL_BOOLEAN.to_a + TEMPORAL_LOCAL_BOOLEAN.to_a
-      string_range = GLOBAL_STRING.to_a + LOCAL_STRING.to_a
+      string_range = GLOBAL_STRING.to_a + LOCAL_STRING.to_a + TEMPORAL_GLOBAL_STRING.to_a + TEMPORAL_LOCAL_STRING.to_a
       
       @params.each do |param|
         case
