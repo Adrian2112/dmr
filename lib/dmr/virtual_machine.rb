@@ -88,6 +88,13 @@ module DMR
           tmp = Math.log10(@variables.get_variable(cuadruplo[2]))
           n = Math.log10(@variables.get_variable(cuadruplo[3]))
           @variables.set_variable(cuadruplo[4], tmp/n)
+        when "sqrt"
+          tmp = Math.sqrt(@variables.get_variable(cuadruplo[2]))
+          @variables.set_variable(cuadruplo[4], tmp)          
+        when "pow"
+          n = @variables.get_variable(cuadruplo[2])
+          pow = @variables.get_variable(cuadruplo[3])
+          @variables.set_variable(cuadruplo[4], n**pow)
         when "="
           @variables.set_variable(cuadruplo[4],@variables.get_variable(cuadruplo[2]))
         when "+A"
@@ -114,8 +121,11 @@ module DMR
         when "and"
           tmp = (@variables.get_variable(cuadruplo[2]) and @variables.get_variable(cuadruplo[3]))
           @variables.set_variable(cuadruplo[4],tmp)          
-        when "write"
+        when "writeln"
           puts @variables.get_variable(cuadruplo[4])
+          $stdout.flush
+        when "write"
+          print @variables.get_variable(cuadruplo[4])
           $stdout.flush
         when "goTo"
           @ip = cuadruplo[4].to_i - 1
@@ -137,6 +147,8 @@ module DMR
             puts "Dennis dice: Indice '#{@variables.get_variable(cuadruplo[2])}' fuera del rango del arreglo"
             Process.exit
           end
+        when "END"
+          puts ""
         end
         @ip += 1
       end
