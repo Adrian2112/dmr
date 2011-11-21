@@ -82,7 +82,11 @@ module DMR
     end
     
     def get_variable(direccion)
-      direccion = direccion.to_i
+      if direccion.include?("\"")
+        return direccion
+      else
+        direccion = direccion.to_i
+      end
       case direccion
         when GLOBAL_INT                 then return @globales_int[direccion]
         when GLOBAL_FLOAT               then return @globales_float[direccion]
