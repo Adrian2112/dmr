@@ -90,7 +90,7 @@ module DMR
     end
     
     def get_variable(direccion)
-      if direccion.include?("\"")
+      if direccion.is_a?(String) and direccion.include?("\"")
         return direccion.gsub("\"","")
       else
         direccion = direccion.to_i
